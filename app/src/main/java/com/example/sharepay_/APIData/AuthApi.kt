@@ -10,4 +10,9 @@ interface AuthApi {
     suspend fun signup(
         @Body request: SignupRequest
     ): Response<SignupResponse>
+
+    @POST("/api/auth/login")
+    suspend fun login(
+        @Body request: LoginRequest
+    ): Response<LoginResponse>
 }

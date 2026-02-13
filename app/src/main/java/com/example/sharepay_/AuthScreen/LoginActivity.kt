@@ -1,23 +1,29 @@
 package com.example.sharepay_.AuthScreen
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.sharepay_.viewModel.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    onLoginClick: (String, String) -> Unit,
+    onLoginSuccess: () -> Unit,
     onSignUpClick: () -> Unit,
-    onForgotPassClick: () -> Unit
+    onForgotPassClick: () -> Unit,
+    loginViewModel: LoginViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -76,7 +82,16 @@ fun LoginScreen(
 
         // Login Button
         Button(
-            onClick = { onLoginClick(email, password) },
+            onClick = {
+                loginViewModel.login(email, password) { success, message ->
+                    if (success) {
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        onLoginSuccess()
+                    } else {
+                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

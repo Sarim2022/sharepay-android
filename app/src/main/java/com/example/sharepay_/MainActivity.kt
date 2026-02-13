@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sharepay_.AuthScreen.LoginScreen
 import com.example.sharepay_.AuthScreen.SharePaySplashScreen
 import com.example.sharepay_.AuthScreen.SignUpScreen
+import com.example.sharepay_.onBoardScreen.HomedashBoard
 import com.example.sharepay_.ui.theme.Sharepay_Theme
 
 class MainActivity : ComponentActivity() {
@@ -35,7 +36,9 @@ fun SharePayApp() {
         }
         composable("login") {
             LoginScreen(
-                onLoginClick = { email, pass -> /* Logic */ },
+                onLoginSuccess = {
+                    navController.navigate("home") { popUpTo("login") { inclusive = true } }
+                },
                 onSignUpClick = { navController.navigate("signup") },
                 onForgotPassClick = { /* Logic */ }
             )
@@ -44,6 +47,9 @@ fun SharePayApp() {
             SignUpScreen(
                 onLoginClick = { navController.popBackStack() }
             )
+        }
+        composable("home") {
+            HomedashBoard(onTimeout = { /* Can be used for logout if needed */ })
         }
     }
 }
